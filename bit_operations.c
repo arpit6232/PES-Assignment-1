@@ -1,4 +1,27 @@
-/* https://www.geeksforgeeks.org/program-to-reverse-a-string-using-pointers/
+/******************************************************************************
+*​​Copyright​​ (C) ​​2020 ​​by ​​Arpit Savarkar
+*​​Redistribution,​​ modification ​​or ​​use ​​of ​​this ​​software ​​in​​source​ ​or ​​binary
+*​​forms​​ is​​ permitted​​ as​​ long​​ as​​ the​​ files​​ maintain​​ this​​ copyright.​​ Users​​ are
+*​​permitted​​ to ​​modify ​​this ​​and ​​use ​​it ​​to ​​learn ​​about ​​the ​​field​​ of ​​embedded
+*​​software. ​​Arpit Savarkar ​​and​ ​the ​​University ​​of ​​Colorado ​​are ​​not​ ​liable ​​for
+*​​any ​​misuse ​​of ​​this ​​material.
+*
+******************************************************************************/ 
+/**
+ * @file bit_operations.c
+ * @brief An abstraction for bit manipulation operations and 
+ * hexdump from a specific location 
+ * 
+ * This file provides functions and abstractions for bit manipulation 
+ * decimal to binary, decimal to hex, clearing, Setting and toggling 
+ * a bit and printing a hex dump from a specific location
+ * 
+ * @author Arpit Savarkar
+ * @date August 27 2020
+ * @version 1.0
+
+https://www.geeksforgeeks.org/program-to-reverse-a-string-using-pointers/
+
 
 */
 
@@ -8,6 +31,7 @@
 #define hex_asc_lo(x)	hex_asc[((x) & 0x0f)]
 #define hex_asc_hi(x)	hex_asc[((x) & 0xf0) >> 4]
 
+// Helper Functions to convert to Hexadecimal
 char rem(int num) 
 { 
     if (num >= 0 && num <= 9) 
@@ -16,19 +40,19 @@ char rem(int num)
         return (char)(num - 10 + 'A'); 
 } 
 
-// Function to set nth bit of input 
+// Helper Function to set nth bit of input 
 int set_bit(uint32_t input, int bit) 
 { 
     return (input | (1 << (bit))); 
 } 
   
-// Function to clear nth bit of input 
+// Helper Function to clear nth bit of input 
 int clear_bit(uint32_t input, int bit) 
 { 
     return (input & (~(1 << (bit)))); 
 } 
   
-// Function to toggle the nth bit of input 
+// Helper Function to toggle the nth bit of input 
 int toggle_bit(uint32_t input, int bit) 
 { 
     return (input ^ (1 << (bit))); 
@@ -281,11 +305,6 @@ char *hexdump(char *str, size_t size, const void *loc, size_t nbytes) {
         str[k++] = 0x20;
         i++;
     }
-    
-    // // And print the final ASCII buffer.
-    // for (i = 0; i < k ; i++) {
-    // printf ("%x ", str[i]);
-    // }
 
 }
 
