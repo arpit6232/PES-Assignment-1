@@ -5,6 +5,8 @@
 #include "bit_operations.h"
 
 #define MASK(x) (1UL << (x))
+#define hex_asc_lo(x)	hex_asc[((x) & 0x0f)]
+#define hex_asc_hi(x)	hex_asc[((x) & 0xf0) >> 4]
 
 char rem(int num) 
 { 
@@ -17,19 +19,22 @@ char rem(int num)
 int uint_to_binstr(char *str, size_t size, uint32_t num, uint8_t nbits) {
 
     int base = 2, len = 0, i =0;
-    char *p = str;
-    *(p++) = '0';
-    *(p++) = 'b';
+    str[0] = '0';
+    str[1] = 'b';
+    
+    for (i =2; i < nbits+2; i++) {
+        str[i] = '0';
+    }
+    str[i] = '\0';
 
-    for (i =0; i < nbits; i++) 
-        *(p++) = '0';
-    *(p) = '\0';
-    char *t = (--p);
-    while(num>0) {
-        *t = rem(num % base);
-        t--;
+    for (i =2; i < nbits+2; i++) {
+        str[i] = '0';
+    }
+    str[i] = '\0';
+    while (num>0) {
+        str[--i] = rem(num % base);
         num /= base;
-        len++;
+        len ++;
     }
     if (nbits ==0 ) {
         printf("Illegal bits");
@@ -41,10 +46,9 @@ int uint_to_binstr(char *str, size_t size, uint32_t num, uint8_t nbits) {
         *str = NULL;
         return -1;
     }
-    p = str;
     len=0;
-    while (*(p++) != '\0')
-        len++;
+    for (i =0 ; str[i]!= '\0'; i++)
+        len++;  
 
     return len;
 }
@@ -121,15 +125,16 @@ int int_to_binstr(char *str, size_t size, int32_t num, uint8_t nbits) {
 int uint_to_hexstr(char *str, size_t size, uint32_t num, uint8_t nbits) {
 
     int base = 16, len = 0, i =0;
+    int k = 0;
+    // char *p = str;
+    str[k++] = '0';
+    str[k++] = 'b';
 
-    char *p = str;
-    *(p++) = '0';
-    *(p++) = 'b';
-
-    for (i =0; i < nbits/4; i++) 
-        *(p++) = '0';
-    *(p) = '\0';
-    char *t = (--p);
+    for (i=0; i < (nbits+2)/4; i++) 
+        str[k++] = '0';
+    str[k] = '\0';
+    char *t ;
+    t = &str[--k];
     while(num>0) {
         *t = rem(num % base);
         t--;
@@ -146,13 +151,13 @@ int uint_to_hexstr(char *str, size_t size, uint32_t num, uint8_t nbits) {
         *str = NULL;
         return -1;
     }
-    p = str;
-    len=0;
-    while (*(p++) != '\0')
+    
+    len = 0;
+    for(i =0; str[i]!='\0'; i++) {
         len++;
+    }
 
     return len;
-
 }
 
 // Function to set nth bit of input 
@@ -212,44 +217,42 @@ uint32_t grab_three_bits(uint32_t input, int start_bit) {
 
 char *hexdump(char *str, size_t size, const void *loc, size_t nbytes) {
 
-    char line[17];
     int i;
-    char *counter = loc;
-    char*p = str;
-    int start = 0x0000;
+    unsigned char buff[17];
+    unsigned char *pc = loc;
 
-    if(nbytes ==0 || nbytes <0)
-        return -1;
+    for (i = 0; i< nbytes; i++) {
 
-    for (i=0; i<nbytes; i++) {
+        // Multiples of 16 means new line with line offset 
+
         if ((i % 16) == 0) {
-            if (i != 0)
-                *(p++) = '\n';
+            if( i != 0) {
+                for(int j = 0; buff[i]!='\0'; i++)
+                    str[i] = buff[i];
+            }
 
-            *(p++) = start;
-            start+=16;
-            // printf ("  %04x ", i);
+            str[i] = 0x0000 + i;
         }
-        *(p++) = 0x00 + counter[i];
-        // printf (" %02x", counter[i]);
 
-    // And buffer a printable ASCII character for later.
+        str[i] = 0x00 + pc[i];
 
-    if ((counter[i] < 0x20) || (counter[i] > 0x7e)) 
-        line[i % 16] = '.';
-    else
-        line[i % 16] = counter[i];
-    line[(i % 16) + 1] = '\0';
+        // And store a printable ASCII character for later.
+        if ((pc[i] < 0x20) || (pc[i] > 0x7e)) {
+            buff[i % 16] = '.';
+        } else {
+            buff[i % 16] = pc[i];
+        }
 
+        buff[(i % 16) + 1] = '\0';
     }
+    // Pad out last line if not exactly 16 characters.
+        while ((i % 16) != 0) {
+            str[i] = "   ";
+            i++;
+        }
 
-    while ((i % 16) != 0) {
-        *(p++) = "   ";
-        i++;
-    }
-
-    p = line;
-
+    // And print the final ASCII bit.
+    printf("  %s\n", buff);
 
 }
 

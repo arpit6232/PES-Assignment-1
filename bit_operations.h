@@ -8,6 +8,7 @@
 
 #include <stdlib.h>
 #include <inttypes.h>
+#include <stdbool.h>
 #include <ctype.h>
 // UINT32_MAX
 
