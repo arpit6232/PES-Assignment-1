@@ -16,6 +16,24 @@ char rem(int num)
         return (char)(num - 10 + 'A'); 
 } 
 
+// Function to set nth bit of input 
+int set_bit(uint32_t input, int bit) 
+{ 
+    return (input | (1 << (bit))); 
+} 
+  
+// Function to clear nth bit of input 
+int clear_bit(uint32_t input, int bit) 
+{ 
+    return (input & (~(1 << (bit)))); 
+} 
+  
+// Function to toggle the nth bit of input 
+int toggle_bit(uint32_t input, int bit) 
+{ 
+    return (input ^ (1 << (bit))); 
+}
+
 int uint_to_binstr(char *str, size_t size, uint32_t num, uint8_t nbits) {
 
     int base = 2, len = 0, i =0;
@@ -128,7 +146,7 @@ int uint_to_hexstr(char *str, size_t size, uint32_t num, uint8_t nbits) {
     int k = 0;
     // char *p = str;
     str[k++] = '0';
-    str[k++] = 'b';
+    str[k++] = 'x';
 
     for (i=0; i < (nbits+2)/4; i++) 
         str[k++] = '0';
@@ -151,31 +169,13 @@ int uint_to_hexstr(char *str, size_t size, uint32_t num, uint8_t nbits) {
         *str = NULL;
         return -1;
     }
-    
+
     len = 0;
     for(i =0; str[i]!='\0'; i++) {
         len++;
     }
 
     return len;
-}
-
-// Function to set nth bit of input 
-int set_bit(uint32_t input, int bit) 
-{ 
-    return (input | (1 << (bit))); 
-} 
-  
-// Function to clear nth bit of input 
-int clear_bit(uint32_t input, int bit) 
-{ 
-    return (input & (~(1 << (bit)))); 
-} 
-  
-// Function to toggle the nth bit of input 
-int toggle_bit(uint32_t input, int bit) 
-{ 
-    return (input ^ (1 << (bit))); 
 } 
 
 typedef enum {
@@ -217,42 +217,75 @@ uint32_t grab_three_bits(uint32_t input, int start_bit) {
 
 char *hexdump(char *str, size_t size, const void *loc, size_t nbytes) {
 
+
+    if (nbytes > size) {
+        str = '\0';
+        return str;
+    }
+        
     int i;
     unsigned char buff[17];
-    unsigned char *pc = loc;
+    const unsigned char * pc = (const unsigned char *)loc;
+    int k = 0;
 
-    for (i = 0; i< nbytes; i++) {
+    // Length checks.
 
-        // Multiples of 16 means new line with line offset 
+    if (nbytes == 0) {
+        printf("  ZERO LENGTH\n");
+        return;
+    }
+    else if (nbytes < 0) {
+        printf("  NEGATIVE LENGTH: %d\n", nbytes);
+        return;
+    }
+
+    // Process every byte in the data.
+
+    for (i = 0; i < nbytes; i++) {
+        // Multiple of 16 means new line (with line offset).
 
         if ((i % 16) == 0) {
-            if( i != 0) {
-                for(int j = 0; buff[i]!='\0'; i++)
-                    str[i] = buff[i];
+            // Don't print ASCII buffer for the "zeroth" line.
+
+            if (i != 0) {
+                str[k++] = '\n';
             }
 
-            str[i] = 0x0000 + i;
+            // Output the offset.
+            str[k++] = '0';
+            str[k++] = 'x';
+            if(i == 0)
+                str[k++] = '0';
+            
+            str[k++] = i;
+            for (int s =0; s<2; s++)
+                str[k++] = ' ';
         }
 
-        str[i] = 0x00 + pc[i];
+        // Now the hex code for the specific character.
+        str[k++] = pc[i];
+        str[k++] = ' ';
 
-        // And store a printable ASCII character for later.
-        if ((pc[i] < 0x20) || (pc[i] > 0x7e)) {
+        // And buffer a printable ASCII character for later.
+
+        if ((pc[i] < 0x20) || (pc[i] > 0x7e)) 
             buff[i % 16] = '.';
-        } else {
+        else
             buff[i % 16] = pc[i];
-        }
-
         buff[(i % 16) + 1] = '\0';
     }
-    // Pad out last line if not exactly 16 characters.
-        while ((i % 16) != 0) {
-            str[i] = "   ";
-            i++;
-        }
 
-    // And print the final ASCII bit.
-    printf("  %s\n", buff);
+    // Pad out last line if not exactly 16 characters.
+
+    while ((i % 16) != 0) {
+        str[k++] = 0x20;
+        i++;
+    }
+    
+    // // And print the final ASCII buffer.
+    // for (i = 0; i < k ; i++) {
+    // printf ("%x ", str[i]);
+    // }
 
 }
 
