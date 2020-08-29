@@ -498,7 +498,7 @@ char *hexdump(char *str, size_t size, const void *loc, size_t nbytes) {
     if (nbytes <= 0) {
         printf("  ZERO LENGTH\n");
         str[0]='\0';
-        return -1;
+        return str;
     }
 
     int i, j;
@@ -577,11 +577,33 @@ char *hexdump(char *str, size_t size, const void *loc, size_t nbytes) {
 
 void test_hexdump() {
 
+    const char *buf= "To achieve great things, two things are needed:\n a plan, and not quite enough time.";
+    size_t size = 1024;
+    char str[size];
+
+    hexdump(str, size, buf, strlen(buf)+1);
+    if (str[0] == '\0')
+        return 0;
+    
+    size = 0;
+    hexdump(str, size, buf, strlen(buf)+1);
+    if (str[0] != '\0')
+        return 0;
+    
+    return 1;
+
 }
 
 
 
 int main(int argc, char** argv) {
+
+    void test_uint_to_binstr();
+    void test_int_to_binstr();
+    void test_uint_to_hexstr();
+    void test_twiggle_bit();
+    void test_grab_three_bits();
+    void test_hexdump();
 
     return 0;
 }
