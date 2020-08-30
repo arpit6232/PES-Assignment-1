@@ -23,7 +23,7 @@
  * 
 
   Sources of Reference :
-  Links :https://stackoverflow.com/questions/7775991/how-to-get-hexdump-of-a-structure-data
+  Online Links :https://stackoverflow.com/questions/7775991/how-to-get-hexdump-of-a-structure-data
   Textbooks : Embedded Systems Fundamentals with Arm Cortex-M based MicroControllers 
 
   I would like to thank the SA's for the course Rakesh Kumar, Saket Penurkar for their 
@@ -73,25 +73,28 @@ int toggle_bit(uint32_t input, int bit)  {
 int check_legality(char *str, size_t size, uint32_t num, uint8_t nbits, 
                    int base) {
 
-    // Function to prevent segmentation fault to acess 
+    // Functions to check segmentation fault and access to illegal number
+    // of bits  
 
     int len = 0;
 
+    // Segmentation Faults Check
     if( (nbits/8) > size )
         return -1;
 
     // Illegal nbits
-    if (nbits == 0 ) {
+    if (nbits <= 0 ) {
         str[0] = '\0';
         return -1;
     }
 
     int temp = num;
-    while (temp>0) { // Returns the modulo as binary for base 2
+    while (temp>0) { // Returns the modulo as binary of specified base
         temp /= base;
         len++;
     }
-
+    
+    // Seg Fault Check
     if (len > nbits) {
         str[0] = '\0';
         return -1;
@@ -129,21 +132,19 @@ void dec_to_bin(char *str, size_t size, uint32_t num, uint8_t nbits) {
 
 
 int uint_to_binstr(char *str, size_t size, uint32_t num, uint8_t nbits) {
-
-
     int len = 0;
 
+    // Illegal setup
     if(num<0)
         return -1;
+
+    // Seg faults and minimum size setup check
     if (check_legality(str, size, num, nbits, 2) == -1)
         return -1;
+
+    // Function to convert the input "num" to Binary 
     dec_to_bin(str, size, num, nbits);
 
-    // To prevent Segmentation faults restricted to nbits 
-    if (len > nbits) {
-        str[0] = '\0';
-        return -1;
-    }
     len = 0;
     for (int i =0; str[i]!='\0'; i++)
         len++;
@@ -157,19 +158,22 @@ void test_uint_to_binstr() {
     char str[size];
     int k =0;
     int ret,i;
-        
-    ret = uint_to_binstr(str, size, INT8_MIN, 8);
-        if(ret == -1) 
+    
+    // Valid Number of Bit Check 
+    ret = uint_to_binstr(str, size, UINT8_MAX, 8);
+        if(ret != -1) 
             return 0;
-
-    ret = uint_to_binstr(str, size, INT8_MAX, 8);
+    // InValid Number of Bits as input 
+    ret = uint_to_binstr(str, size, UINT8_MAX+1, 8);
         if(ret != -1) 
             return 0;
 
-    ret = uint_to_binstr(str, size, 0, 16);
+    // Valid Number of Bit Check
+    ret = uint_to_binstr(str, size, INT16_MAX, 16);
         if(ret == -1) 
             return 0;
 
+    // InValid Number of Bits as input
     ret = uint_to_binstr(str, size, UINT16_MAX+1, 8);
         if(ret != -1) 
             return 0;
@@ -178,14 +182,17 @@ void test_uint_to_binstr() {
     // Compiler interprets UINT32_MAX as -1 when assigned to uint32_t
     // which results in legality check to be as negative number 
 
+    // InValid Number of Bits as input
     ret = uint_to_binstr(str, size, UINT32_MAX, 8);
         if(ret != 0) 
             return 0;
 
+    // InValid Number of Bits as input
     ret = uint_to_binstr(str, size, UINT32_MAX, 16);
         if(ret != 0) 
             return 0;
 
+    // Valid Input Check
     ret = uint_to_binstr(str, size, UINT32_MAX, 32);
         if(ret == 0) 
             return 0;
@@ -202,14 +209,17 @@ int int_to_binstr(char *str, size_t size, int32_t num, uint8_t nbits) {
     if (num>0) 
         return uint_to_binstr(str, size, num, nbits);
 
+    // Function to Check Segmentation Faults and Illegal Bit Access
     if (check_legality(str, size, num*-1, nbits, 2) == -1)
         return -1;
 
     num *= -1;
     int i =0,  c = 1;
 
+    // Decimal to Binary Conversion
     dec_to_bin(str, size, num, nbits);
 
+    // 1's compliment logic 
     for(i =2; str[i]!='\0'; i++) {
         if(str[i] == '1')
             str[i] = '0';
@@ -218,6 +228,8 @@ int int_to_binstr(char *str, size_t size, int32_t num, uint8_t nbits) {
             str[i] = '1';
     }
     int k = i-1;
+
+    // 2's compliment logic 
     for (i = k; i>=0; i--) {
         if(str[i] == '1' && c == 1) {
             str[i] = '0';
@@ -241,37 +253,44 @@ void test_int_to_binstr() {
     uint8_t nbits = 16;
     int k =0;
     int ret,i;
-        
+    
+    // Invalid number of bits as input Test
     ret = int_to_binstr(str, size, INT8_MIN*2, 8);
         if(ret != -1) 
             return 0;
     
+    // Valid Input Test 
     ret = int_to_binstr(str, size, INT8_MIN, 8);
         if(ret == -1) 
             return 0;
 
+    // Invalid number of bits as input Test
     ret = int_to_binstr(str, size, INT8_MAX*2+2, 8);
         if(ret != -1) 
             return 0;
 
+    // Valid Input Test
     ret = int_to_binstr(str, size, INT8_MAX, 8);
         if(ret == -1) 
             return 0;
 
 
-
+    // Invalid number of bits as input Test
     ret = int_to_binstr(str, size, INT16_MIN*2, 16);
         if(ret != -1) 
             return 0;
     
+    // Valid Input Test
     ret = int_to_binstr(str, size, INT16_MIN, 16);
         if(ret == -1) 
             return 0;
 
+    // Invalid number of bits as input Test
     ret = int_to_binstr(str, size, INT16_MAX*2+2, 16);
         if(ret != -1) 
             return 0;
 
+    // Valid Input Test
     ret = int_to_binstr(str, size, INT16_MAX, 16);
         if(ret == -1) 
             return 0;
@@ -280,26 +299,32 @@ void test_int_to_binstr() {
     // Compiler interprets UINT32_MAX as -1 when assigned to uint32_t
     // which results in legality check to be as negative number 
 
+    // Invalid number of bits as input Test
     ret = int_to_binstr(str, size, INT32_MIN+1, 8);
         if(ret != -1) 
             return 0;
 
+    // Invalid number of bits as input Test
     ret = int_to_binstr(str, size, INT32_MIN+1, 16);
         if(ret != -1) 
             return 0;
 
+    // Valid Input test 
     ret = int_to_binstr(str, size, INT32_MIN+1, 32);
         if(ret == 0) 
             return 0;
 
+    // Invalid number of bits as input Test
     ret = int_to_binstr(str, size, INT32_MAX-1, 8);
         if(ret != -1) 
             return 0;
 
+    // Invalid Number of bits as input test
     ret = int_to_binstr(str, size, INT32_MAX-1, 16);
         if(ret != -1) 
             return 0;
 
+    // Valid input test 
     ret = int_to_binstr(str, size, INT32_MAX-1, 32);
         if(ret == 0) 
             return 0;
@@ -314,16 +339,15 @@ int uint_to_hexstr(char *str, size_t size, uint32_t num, uint8_t nbits) {
     int base = 16, len = 0, i =0;
     int k = 2;
 
-    if (check_legality(str, size, num, nbits, base) == -1)
-        return -1;
-
-    if (nbits/4 == 0 ) {
+    // Illegal Num Bit setup
+    if (nbits <= 0 ) {
         str[0] = '\0';
         return -1;
     } 
 
+    // Illegal Length of bit setup
     int temp = num;
-    while (temp>0) { // Returns the modulo as binary for base 2
+    while (temp>0) { // Returns the modulo as binary for base 
         temp /= base;
         len++;
     }
@@ -336,20 +360,23 @@ int uint_to_hexstr(char *str, size_t size, uint32_t num, uint8_t nbits) {
     str[0] = '0';
     str[1] = 'x';
 
+    // Initalizing with '0's for required nbits in hex
     for (i=0; i < nbits/4; i++) {
         str[k++] = '0';
         printf("i :%d\n", i);
     }
+
+    // Marking Enf of string    
     str[k] = '\0';
+
+    // Conversion of Decimal to Hex 
     while(num>0) {
-        char rem = convert(num % base);
-        // printf("%c", rem);
         str[--k] = convert(num % base);
         num /= base;
         len++;
     }
-    // str[++k] = '\0';
 
+    // Length Calculation
     len = 0;
     for(i =0; str[i]!='\0'; i++) {
         printf("%c", str[i]);
@@ -363,19 +390,23 @@ void test_uint_to_hexstr() {
     size_t size = 1024;
     char str[size];
     int ret;
-        
+
+    // Invalid Check input 
     ret = uint_to_hexstr(str, size, INT8_MIN, 8);
         if(ret == -1) 
             return 0;
 
+    // Valid Check Input
     ret = uint_to_hexstr(str, size, INT8_MAX, 8);
         if(ret != -1) 
             return 0;
 
-    ret = uint_to_hexstr(str, size, 0, 16);
+    // Invalid Check input
+    ret = uint_to_hexstr(str, size, INT16_MIN, 16);
         if(ret == -1) 
             return 0;
 
+    // Valid Check Input
     ret = uint_to_hexstr(str, size, UINT16_MAX, 8);
         if(ret != -1) 
             return 0;
@@ -384,14 +415,17 @@ void test_uint_to_hexstr() {
     // Compiler interprets UINT32_MAX as -1 when assigned to uint32_t
     // which results in legality check to be as negative number 
 
+    // Invalid Check input
     ret = uint_to_hexstr(str, size, UINT32_MAX, 8);
         if(ret != -1) 
             return 0;
 
+    // Invalid Check input
     ret = uint_to_hexstr(str, size, UINT32_MAX, 16);
         if(ret != -1) 
             return 0;
 
+    // Valid Check Output
     ret = uint_to_hexstr(str, size, UINT32_MAX, 32);
         if(ret == -1) 
             return 0;
@@ -403,19 +437,24 @@ void test_uint_to_hexstr() {
 
 uint32_t twiggle_bit(uint32_t input, int bit, operation_t operation) {
 
+    // Invalid bit check
     if ( bit <0 || bit > 31)
         return 0xFFFFFFFF;
 
+    // Function call to clear specific bit
     if (operation == CLEAR) {
         return clear_bit(input, bit);
     }
+    // Function call to set specific bit
     else if (operation == SET) {
         return set_bit(input, bit);
     }
+    // Function call to toggle specific bit
     else if (operation == TOGGLE) {
         return toggle_bit(input, bit);
     }
     else {
+    // Invalid Operation
         return 0xFFFFFFFF;
     }
 
@@ -425,31 +464,41 @@ void test_twiggle_bit() {
 
     uint32_t input = UINT32_MAX-2;
     uint32_t output;
+
+    // Validity Check to clear bit 0 
     if (twiggle_bit(input, 0, CLEAR) ==  0xFFFFFFFF )
         return 0;
 
+    // Validity Check to set bit 0 
     if (twiggle_bit(input, 0, SET) ==  0xFFFFFFFF )
         return 0;
 
+    // Validity Check to toggle bit 0 
     if (twiggle_bit(input, 0, TOGGLE) ==  0xFFFFFFFF )
         return 0;
 
-    if (twiggle_bit(input, 32, CLEAR) ==  0xFFFFFFFF )
+    // bit size restricted 0 - 31
+    if (twiggle_bit(input, 32, CLEAR) !=  0xFFFFFFFF )
         return 0;
 
-    if (twiggle_bit(input, 32, SET) ==  0xFFFFFFFF )
+    // bit size restricted 0 - 31
+    if (twiggle_bit(input, 32, SET) !=  0xFFFFFFFF )
         return 0;
 
-    if (twiggle_bit(input, 32, TOGGLE) ==  0xFFFFFFFF )
+    // bit size restricted 0 - 31
+    if (twiggle_bit(input, 32, TOGGLE) !=  0xFFFFFFFF )
         return 0;
 
-    if (twiggle_bit(input, -1, CLEAR) ==  0xFFFFFFFF )
+    // Invalid Bit Test
+    if (twiggle_bit(input, -1, CLEAR) !=  0xFFFFFFFF )
         return 0;
 
-    if (twiggle_bit(input, -1, SET) ==  0xFFFFFFFF )
+    // Invalid Bit Test
+    if (twiggle_bit(input, -1, SET) !=  0xFFFFFFFF )
         return 0;
 
-    if (twiggle_bit(input, -1, TOGGLE) ==  0xFFFFFFFF )
+    // Invalid Bit Test
+    if (twiggle_bit(input, -1, TOGGLE) !=  0xFFFFFFFF )
         return 0;
 
     return 1;
@@ -464,6 +513,7 @@ uint32_t grab_three_bits(uint32_t input, int start_bit) {
     int num_elem = 3;
     if (start_bit < 0 || start_bit >= 30)
         return 0xFFFFFFFF;
+    // Logic to set the 3 bits from start_bit left to right direction
     output = (((1 << num_elem) - 1) & (input >> (start_bit))); 
     
         return output;
@@ -473,12 +523,15 @@ void test_grab_three_bits() {
 
     uint32_t input = UINT32_MAX-2;
     uint32_t output;
+    // Valid Bit Test
     if (grab_three_bits(input, 0) ==  0xFFFFFFFF )
         return 0;
 
+    // Invalid Bit Test
     if (grab_three_bits(input, 30) !=  0xFFFFFFFF )
         return 0;
 
+    // Illegal Bit Test
     if (grab_three_bits(input, -1)  !=  0xFFFFFFFF )
         return 0;
 
@@ -487,7 +540,8 @@ void test_grab_three_bits() {
 
 
 char *hexdump(char *str, size_t size, const void *loc, size_t nbytes) {
-
+    
+    // Segmentation Fault Check
     if (nbytes > size) {
         str = '\0';
         return str;
@@ -496,24 +550,23 @@ char *hexdump(char *str, size_t size, const void *loc, size_t nbytes) {
     // Length checks.
 
     if (nbytes <= 0) {
-        printf("  ZERO LENGTH\n");
         str[0]='\0';
         return str;
     }
 
     int i, j;
     char temp[3];  // Required to restrict compiler from using 2 bytes for special characters
-    uint8_t rem = 0, num;
+    uint8_t rem = 0, num, rem = 0;
     unsigned char buff[17]; // String of 17 
     const unsigned char * pc = (const unsigned char *)loc;
     int k = 0;
 
     for (i = 0; i < nbytes; i++) {
-        // Multiple of 16 means new line (with line offset).
+        // Newline after 16 bytes check with necessary space/offset.
 
         if ((i % 16) == 0) {
-            // Don't print ASCII buffer for the "zeroth" line.
-
+            
+            // Preventing newline before "zeroth" line buffer.
             if (i != 0) {
                 str[k++] = '\n';
             }
@@ -521,17 +574,21 @@ char *hexdump(char *str, size_t size, const void *loc, size_t nbytes) {
             // Output the offset.
             str[k++] = '0';
             str[k++] = 'x';
+
+            // 0x0_"0"_ requires an extra character zero 
             if(i == 0)
                 str[k++] = '0';
             
+            // Initial Delta from location Decimal to Hex Manipulation
             num = i;
             do 
             { 
-                int rem = num % 16; 
+                rem = num % 16; 
                 str[k++] = (rem > 9)? rem -10 + 'A' : rem + '0'; 
                 num = num/16; 
             } while (num != 0);
             
+            // 2 Spaces between Address and Buffer Values
             for (int s =0; s<2; s++)
                 str[k++] = ' ';
         }
@@ -539,7 +596,8 @@ char *hexdump(char *str, size_t size, const void *loc, size_t nbytes) {
         // Now the hex code for the specific character.
         str[k++] = '0';
         str[k++] = '0';
-        // k+=;
+
+        // Hexadecimal equivalent of buffer
         num = pc[i];
         for(j=0; temp[j]!='\0'; j++)
             temp[j] = '0';
@@ -550,13 +608,15 @@ char *hexdump(char *str, size_t size, const void *loc, size_t nbytes) {
             temp[j++] =  (rem > 9)? (rem-10) + 'A' : rem + '0' ; 
             num = num/16; 
         }
+
+        // Manipulation Reversing the hex string to get the right order
         j = 0;
-        // temp[j] = '\0';
         for(j = 0; j<=1; j++)
             str[--k] = temp[j];
         k+=2;
+
+        // Space after the hexdump of memory after every address read 
         str[k++] = ' ';
-        // And buffer a printable ASCII character for later.
 
         if ((pc[i] > 0x20) || (pc[i] < 0x7e)) 
             buff[i % 16] = '.';
@@ -565,8 +625,7 @@ char *hexdump(char *str, size_t size, const void *loc, size_t nbytes) {
         buff[(i % 16) + 1] = '\n';
     }
 
-    // Pad out last line if not exactly 16 characters.
-
+    // Padding out last line if not exactly 16 characters.
     while ((i % 16) != 0) {
         str[k++] = ' ';
         i++;
@@ -581,10 +640,12 @@ void test_hexdump() {
     size_t size = 1024;
     char str[size];
 
+    // Valid Input Test
     hexdump(str, size, buf, strlen(buf)+1);
     if (str[0] == '\0')
         return 0;
     
+    // Invalid Input Test
     size = 0;
     hexdump(str, size, buf, strlen(buf)+1);
     if (str[0] != '\0')
@@ -593,7 +654,6 @@ void test_hexdump() {
     return 1;
 
 }
-
 
 
 int main(int argc, char** argv) {
