@@ -7,7 +7,7 @@ Code for Assignment 1 for PES, ECEN-5813, Fall 2020
 
 Repository for PES-Assignment 1 
 
-- <b>bit_operations.h - Header file which contains the function prototypes and enumerators needed for bit_operations.c
+- <b>bit_operations.h - Header file which contains the function prototypes and enumerators needed for bit_operations.c</b>
 - <b>bit_operations.c - The main script for bit manipulation and data representation styles (decimal, binary and hexadecimal) and code for hexdump from a specific location</b>
 
 Involves Six Functions and Unit Tests and helper functions for the following 
