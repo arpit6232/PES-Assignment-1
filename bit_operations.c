@@ -1079,12 +1079,17 @@ int test_hexdump(int debug) {
 // MAIN
 int main(int argc, char* argv[]) {
     int status[6] = {0};
-    int debug;
+    int debug=0;
 
-    if(argc > 1)
-        debug = 1;
-    printf("\n DEBUG Status : %d \n", debug);
-
+    for (int i = 1; i < argc; i++) {
+    if (argv[i][0] == '-') {
+       if (argv[i][1] == 'd') 
+       {
+           debug = 1;
+           printf("\n DEBUG Status : %d \n", debug);
+       }
+    }
+    }
 
     status[0] = test_uint_to_binstr(debug);
     status[1] = test_int_to_binstr(debug);
