@@ -34,3 +34,11 @@ Involves Six Functions and Unit Tests and helper functions for the following
 This assignment demonstrates C Programming from scratch for data representation conversion and basic bit manipulation, it also demonstrates a code for reading a hexdump from a address specified. 
 
 ## Execution 
+
+ - To run the Program :
+1) make
+2) ./bit_operations
+
+ - TO Use with Debug Mode 
+1)gcc bit_operations.h bit_operations.c -o bit_operations
+2) ./bit_operations -d
