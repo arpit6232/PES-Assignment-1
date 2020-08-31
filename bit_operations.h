@@ -31,7 +31,7 @@ char convert(int num);
 int set_bit(uint32_t input, int bit);
 
 /**
-​ * ​ ​ @brief​ ​ Returns a integer set with a specific bit
+​ * ​ ​ @brief​ ​ Returns a integer cleared specific bit
 ​ *
 ​ * ​ ​ Given​ ​a integer ​and a bit location,​ this​ ​ will​ ​ return​ ​ a uint32_t
  *   cleared to a specified bit location
@@ -89,7 +89,6 @@ int uint_to_binstr(char *str, size_t size, uint32_t num, uint8_t nbits);
 ​ *
 ​ * ​ ​ @return​ ​ int
 ​ */
-
 int int_to_binstr(char *str, size_t size, int32_t num, uint8_t nbits);
 
 
@@ -108,7 +107,6 @@ int int_to_binstr(char *str, size_t size, int32_t num, uint8_t nbits);
 ​ *
 ​ * ​ ​ @return​ ​ int
 ​ */
-
 int uint_to_hexstr(char *str, size_t size, uint32_t num, uint8_t nbits);
 
 /**
@@ -122,6 +120,7 @@ int uint_to_hexstr(char *str, size_t size, uint32_t num, uint8_t nbits);
 ​ *   @param  operation : Object to Enum Operation_t
 ​ * ​ ​ @return​ ​ uint32_t
 ​ */
+
 typedef enum {
 CLEAR,
 SET,
@@ -137,8 +136,9 @@ uint32_t twiggle_bit(uint32_t input, int bit, operation_t operation);
 ​ *
 ​ * ​ ​ @return​ ​ uint32_t 
 ​ */
-
 uint32_t grab_three_bits(uint32_t input, int start_bit);
+
+
 /**
 ​ * ​ ​ @brief​ ​ Hex Dump of a memory location upto a selected number of bytes at a specified memory 
  *           location
@@ -155,7 +155,6 @@ uint32_t grab_three_bits(uint32_t input, int start_bit);
  * 
 ​ * ​ ​ @return​ ​ Character Pointer
 ​ */
-
 char *hexdump(char *str, size_t size, const void *loc, size_t nbytes);
 
 
