@@ -26,8 +26,8 @@
   Online Links :https://stackoverflow.com/questions/7775991/how-to-get-hexdump-of-a-structure-data
   Textbooks : Embedded Systems Fundamentals with Arm Cortex-M based MicroControllers 
 
-  I would like to thank the SA's for the course Rakesh Kumar, Saket Penurkar for their 
-  support. 
+  I would like to thank the SA's of the course Rakesh Kumar, Saket Penurkar for their 
+  support to debug the hexdump code. 
 
 */
 
