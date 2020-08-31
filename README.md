@@ -38,6 +38,6 @@ This assignment demonstrates C Programming from scratch for data representation 
 1) make
 2) ./bit_operations
 
- - TO Use with Debug Mode 
+ - TO Use with Debug Mode :
 1)gcc bit_operations.h bit_operations.c -o bit_operations
 2) ./bit_operations -d
