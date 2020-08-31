@@ -1,7 +1,14 @@
 # PES-Assignment-1
+Author: Arpit Savarkar
+
+## Repository Comments 
+_Contains_
 Code for Assignment 1 for PES, ECEN-5813, Fall 2020
 
 Repository for PES-Assignment 1 
+
+- <b>bit_operations.h - Header file which contains the function prototypes and enumerators needed for bit_operations.c
+- <b>bit_operations.c - The main script for bit manipulation and data representation styles (decimal, binary and hexadecimal) and code for hexdump from a specific location</b>
 
 Involves Six Functions and Unit Tests and helper functions for the following 
 1) uint_to_binstr(char *str, size_t size, uint32_t num, uint8_t nbits)
@@ -22,3 +29,8 @@ Involves Six Functions and Unit Tests and helper functions for the following
 
 6) char *hexdump(char *str, size_t size, const void*loc, size_t nbytes)
  - Returns a string representing a “dump” of the nbytesof memorystarting at loc.Bytes areprinted up to 16 bytes per line, separated by newlines
+
+## Assignment Comments 
+This assignment demonstrates C Programming from scratch for data representation conversion and basic bit manipulation, it also demonstrates a code for reading a hexdump from a address specified. 
+
+## Execution 

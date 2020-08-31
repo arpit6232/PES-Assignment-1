@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <stdio.h>
 
 // #define INT_MIN -2147483648
 // #define INT_MAX +2147483647
@@ -211,7 +212,7 @@ void dec_to_bin(char *str, size_t size, uint32_t num, uint8_t nbits);
  * 
 ​ * ​ ​ @return​ ​ Integer ( 1 = Success, 0 = Failure )
 ​ */
-void test_uint_to_binstr();
+int test_uint_to_binstr(int debug);
 
 /**
 ​ * ​ ​ @brief​ ​ Test function to test int_to_binstr() function with test cases  
@@ -224,7 +225,7 @@ void test_uint_to_binstr();
  * 
 ​ * ​ ​ @return​ ​ Integer ( 1 = Success, 0 = Failure )
 ​ */
-void test_int_to_binstr();
+int test_int_to_binstr(int debug);
 
 
 /**
@@ -238,7 +239,7 @@ void test_int_to_binstr();
  * 
 ​ * ​ ​ @return​ ​ Integer ( 1 = Success, 0 = Failure )
 ​ */
-void test_uint_to_hexstr();
+int test_uint_to_hexstr(int debug);
 
 /**
 ​ * ​ ​ @brief​ ​ Test function to test twiggle_bit() function with test cases  
@@ -251,7 +252,7 @@ void test_uint_to_hexstr();
  * 
 ​ * ​ ​ @return​ ​ Integer ( 1 = Success, 0 = Failure )
 ​ */
-void test_twiggle_bit();
+int test_twiggle_bit(int debug);
 
 /**
 ​ * ​ ​ @brief​ ​ Test function to test grab_three_bits() function with test cases  
@@ -264,7 +265,7 @@ void test_twiggle_bit();
  * 
 ​ * ​ ​ @return​ ​ Integer ( 1 = Success, 0xFFFFFFFF = Failure )
 ​ */
-void test_grab_three_bits();
+int test_grab_three_bits(int debug);
 
 /**
 ​ * ​ ​ @brief​ ​ Test function to test hexdump() function with test cases  
@@ -276,7 +277,7 @@ void test_grab_three_bits();
  * 
 ​ * ​ ​ @return​ ​ Integer ( 1 = Success, 0 = Failure )
 ​ */
-void test_hexdump();
+int test_hexdump(int debug);
 
 
 #endif /* BIT_OPERATIONS_ */
