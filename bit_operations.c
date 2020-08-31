@@ -78,10 +78,16 @@ int check_legality(char *str, size_t size, uint32_t num, uint8_t nbits,
 
     int len = 0;
 
-    // Segmentation Faults Check
-    if( (nbits/8) > size )
+    if (size <=0) {
+        str[0] = '\0';
         return -1;
+    }
 
+    // Segmentation Faults Check
+    if( (nbits/8) > size ) {
+        str[0] = '\0';
+        return -1;
+    }
     // Illegal nbits
     if (nbits <= 0 ) {
         str[0] = '\0';
@@ -93,12 +99,19 @@ int check_legality(char *str, size_t size, uint32_t num, uint8_t nbits,
         temp /= base;
         len++;
     }
+
+    if (len == 0) {
+        str[0] = '\0';
+        return -1;
+    }
     
     // Seg Fault Check
     if (len > nbits) {
         str[0] = '\0';
         return -1;
     }
+
+    
 }
 
 void dec_to_bin(char *str, size_t size, uint32_t num, uint8_t nbits) {
@@ -166,13 +179,13 @@ int test_uint_to_binstr(int debug) {
     // Valid Number of Bit Check 
     ret = uint_to_binstr(str, size, UINT8_MAX, 8);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d", size, UINT8_MAX, 8, ret);
-        if(ret != -1) 
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d", size, UINT8_MAX, 8, ret);
+        if(ret == -1) 
             return 0;
     // InValid Number of Bits as input 
     ret = uint_to_binstr(str, size, UINT8_MAX+1, 8);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d", size, UINT8_MAX+1, 8, ret);
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d", size, UINT8_MAX+1, 8, ret);
         if(ret != -1) 
             return 0;
 
@@ -188,21 +201,21 @@ int test_uint_to_binstr(int debug) {
     // Valid Number of Bit Check
     ret = uint_to_binstr(str, size, INT16_MAX, 16);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d",size, INT16_MAX, 16, ret);
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d",size, INT16_MAX, 16, ret);
         if(ret == -1) 
             return 0;
 
     // InValid Number of Bits as input
     ret = uint_to_binstr(str, size, UINT16_MAX+1, 16);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, UINT16_MAX: %d",size, UINT16_MAX+1, 16, ret);
+            printf("\nString Size: %ld, Num: %d, nbits: %d, UINT16_MAX: %d",size, UINT16_MAX+1, 16, ret);
         if(ret != -1) 
             return 0;
 
     // InValid String Size - Segmentation/Bus Fault Test
     ret = uint_to_binstr(str, 0, UINT16_MAX, 16);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d",0, UINT8_MAX, 16, ret);
+            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d",0, UINT16_MAX, 16, ret);
         if(ret != -1) 
             return 0;
 
@@ -213,29 +226,29 @@ int test_uint_to_binstr(int debug) {
     // InValid Number of Bits as input
     ret = uint_to_binstr(str, size, UINT32_MAX, 8);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d",size, UINT32_MAX, 8, ret);
-        if(ret != 0) 
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d",size, UINT32_MAX, 8, ret);
+        if(ret >= 0) 
             return 0;
 
     // InValid Number of Bits as input
     ret = uint_to_binstr(str, size, UINT32_MAX, 16);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d", size, UINT32_MAX, 16, ret);
-        if(ret != 0) 
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d", size, UINT32_MAX, 16, ret);
+        if(ret >= 0) 
             return 0;
 
     // Valid Input Check
     ret = uint_to_binstr(str, size, UINT32_MAX, 32);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d",size, UINT32_MAX, 32, ret);
-        if(ret == 0) 
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d",size, UINT32_MAX, 32, ret);
+        if(ret >= 0) 
             return 0;
 
     // InValid String Size - Segmentation/Bus Fault Test
     ret = uint_to_binstr(str, 0, UINT32_MAX, 32);
         if(debug)
             printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d",0, UINT32_MAX, 32, ret);
-        if(ret != -1) 
+        if(ret >= 0) 
             return 0;
 
     return 1;
@@ -300,28 +313,28 @@ int test_int_to_binstr(int debug) {
     // Invalid number of bits as input Test
     ret = int_to_binstr(str, size, INT8_MIN*2, 8);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d", size, INT8_MIN*2, 8, ret);
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d", size, INT8_MIN*2, 8, ret);
         if(ret != -1) 
             return 0;
     
     // Valid Input Test 
     ret = int_to_binstr(str, size, INT8_MIN, 8);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d", size, INT8_MIN, 8, ret);
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d", size, INT8_MIN, 8, ret);
         if(ret == -1) 
             return 0;
 
     // Invalid number of bits as input Test
     ret = int_to_binstr(str, size, INT8_MAX*2+2, 8);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d", size, INT8_MAX*2+2, 8, ret);
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d", size, INT8_MAX*2+2, 8, ret);
         if(ret != -1) 
             return 0;
 
     // Valid Input Test
     ret = int_to_binstr(str, size, INT8_MAX, 8);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d", size, INT8_MAX, 8, ret);
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d", size, INT8_MAX, 8, ret);
         if(ret == -1) 
             return 0;
 
@@ -338,28 +351,28 @@ int test_int_to_binstr(int debug) {
     // Invalid number of bits as input Test
     ret = int_to_binstr(str, size, INT16_MIN*2, 16);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d", size, INT16_MIN*2, 16, ret);
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d", size, INT16_MIN*2, 16, ret);
         if(ret != -1) 
             return 0;
     
     // Valid Input Test
     ret = int_to_binstr(str, size, INT16_MIN, 16);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d", size, INT16_MIN, 16, ret);
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d", size, INT16_MIN, 16, ret);
         if(ret == -1) 
             return 0;
 
     // Invalid number of bits as input Test
     ret = int_to_binstr(str, size, INT16_MAX*2+2, 16);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d", size, INT16_MAX*2+2, 16, ret);
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d", size, INT16_MAX*2+2, 16, ret);
         if(ret != -1) 
             return 0;
 
     // Valid Input Test
     ret = int_to_binstr(str, size, INT16_MAX, 16);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d", size, INT16_MAX, 16, ret);
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d", size, INT16_MAX, 16, ret);
         if(ret == -1) 
             return 0;
     
@@ -377,42 +390,42 @@ int test_int_to_binstr(int debug) {
     // Invalid number of bits as input Test
     ret = int_to_binstr(str, size, INT32_MIN+1, 8);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d", size, INT32_MIN+1, 8, ret);
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d", size, INT32_MIN+1, 8, ret);
         if(ret != -1) 
             return 0;
 
     // Invalid number of bits as input Test
     ret = int_to_binstr(str, size, INT32_MIN+1, 16);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d", size, INT32_MIN+1, 16, ret);
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d", size, INT32_MIN+1, 16, ret);
         if(ret != -1) 
             return 0;
 
     // Valid Input test 
     ret = int_to_binstr(str, size, INT32_MIN+1, 32);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d", size, INT32_MIN+1, 32, ret);
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d", size, INT32_MIN+1, 32, ret);
         if(ret == 0) 
             return 0;
 
     // Invalid number of bits as input Test
     ret = int_to_binstr(str, size, INT32_MAX-1, 8);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d", size, INT32_MAX-1, 8, ret);
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d", size, INT32_MAX-1, 8, ret);
         if(ret != -1) 
             return 0;
 
     // Invalid Number of bits as input test
     ret = int_to_binstr(str, size, INT32_MAX-1, 16);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d", size, INT32_MAX-1, 16, ret);
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d", size, INT32_MAX-1, 16, ret);
         if(ret != -1) 
             return 0;
 
     // Valid input test 
     ret = int_to_binstr(str, size, INT32_MAX-1, 32);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d", size, INT32_MAX-1, 32, ret);
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d", size, INT32_MAX-1, 32, ret);
         if(ret == 0) 
             return 0;
 
@@ -432,6 +445,16 @@ int uint_to_hexstr(char *str, size_t size, uint32_t num, uint8_t nbits) {
     int base = 16, len = 0, i =0;
     int k = 2;
 
+    //  Illegal Num size 
+    if(num < 0)
+        return -1;
+
+    // Illegal Num Bit setup
+    if (size <= 0 ) {
+        str[0] = '\0';
+        return -1;
+    }
+
     // Illegal Num Bit setup
     if (nbits <= 0 ) {
         str[0] = '\0';
@@ -445,6 +468,11 @@ int uint_to_hexstr(char *str, size_t size, uint32_t num, uint8_t nbits) {
         len++;
     }
 
+    if (len == 0) {
+        str[0] = '\0';
+        return -1;
+    }
+
     if (len > nbits/4) {
         str[0] = '\0';
         return -1;
@@ -456,7 +484,6 @@ int uint_to_hexstr(char *str, size_t size, uint32_t num, uint8_t nbits) {
     // Initalizing with '0's for required nbits in hex
     for (i=0; i < nbits/4; i++) {
         str[k++] = '0';
-        printf("i :%d\n", i);
     }
 
     // Marking Enf of string    
@@ -472,7 +499,6 @@ int uint_to_hexstr(char *str, size_t size, uint32_t num, uint8_t nbits) {
     // Length Calculation
     len = 0;
     for(i =0; str[i]!='\0'; i++) {
-        printf("%c", str[i]);
         len++;
     }
 
@@ -492,11 +518,11 @@ int test_uint_to_hexstr(int debug) {
     // Valid Check Input
     ret = uint_to_hexstr(str, size, UINT8_MAX, 8);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d", size, UINT8_MAX, 8, ret);
-        if(ret != -1) 
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d", size, UINT8_MAX, 8, ret);
+        if(ret == -1) 
             return 0;
     
-    ret = int_to_binstr(str, 0, UINT8_MAX, 8);
+    ret = uint_to_hexstr(str, 0, UINT8_MAX, 8);
         if(debug)
             printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d",0, INT8_MAX, 8, ret);
         if(ret != -1) 
@@ -508,11 +534,11 @@ int test_uint_to_hexstr(int debug) {
     // Valid Check Input
     ret = uint_to_hexstr(str, size, UINT16_MAX, 16);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d", size, UINT16_MAX, 16, ret);
-        if(ret != -1) 
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d", size, UINT16_MAX, 16, ret);
+        if(ret == -1) 
             return 0;
     
-    ret = int_to_binstr(str, 0, UINT16_MAX, 8);
+    ret = uint_to_hexstr(str, 0, UINT16_MAX, 8);
         if(debug)
             printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d",0, UINT16_MAX, 8, ret);
         if(ret != -1) 
@@ -525,22 +551,22 @@ int test_uint_to_hexstr(int debug) {
     // Invalid Check input
     ret = uint_to_hexstr(str, size, UINT32_MAX, 8);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d",0, UINT32_MAX, 8, ret);
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d",size, UINT32_MAX, 8, ret);
         if(ret != -1) 
             return 0;
 
     // Invalid Check input
     ret = uint_to_hexstr(str, size, UINT32_MAX, 16);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d",0, UINT32_MAX, 16, ret);
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d",size, UINT32_MAX, 16, ret);
         if(ret != -1) 
             return 0;
 
     // Valid Check Output
     ret = uint_to_hexstr(str, size, UINT32_MAX, 32);
         if(debug)
-            printf("\nString Size: %d, Num: %d, nbits: %d, Length: %d",0, UINT32_MAX, 32, ret);
-        if(ret == -1) 
+            printf("\nString Size: %ld, Num: %d, nbits: %d, Length: %d",size, UINT32_MAX, 32, ret);
+        if(ret != -1) 
             return 0;
 
     return 1;
@@ -575,7 +601,7 @@ uint32_t twiggle_bit(uint32_t input, int bit, operation_t operation) {
 
 int test_twiggle_bit(int debug) {
 
-    uint32_t input = UINT32_MAX-2;
+    uint32_t input = 0;
     uint32_t output;
 
     if(debug)
@@ -698,8 +724,14 @@ int test_grab_three_bits(int debug) {
 char *hexdump(char *str, size_t size, const void *loc, size_t nbytes) {
     
     // Segmentation Fault Check
+    if (size <= 0) {
+        str[0] = '\0';
+        return str;
+    }
+    
+    // Segmentation Fault Check
     if (nbytes > size) {
-        str = '\0';
+        str[0] = '\0';
         return str;
     }
 
@@ -712,7 +744,7 @@ char *hexdump(char *str, size_t size, const void *loc, size_t nbytes) {
 
     int i, j;
     char temp[3];  // Required to restrict compiler from using 2 bytes for special characters
-    uint8_t rem = 0, num, rem = 0;
+    uint8_t rem = 0, num;
     unsigned char buff[17]; // String of 17 
     const unsigned char * pc = (const unsigned char *)loc;
     int k = 0;
@@ -786,6 +818,7 @@ char *hexdump(char *str, size_t size, const void *loc, size_t nbytes) {
         str[k++] = ' ';
         i++;
     }
+    str[k] = '\0';
     return str;
 }
 
@@ -797,19 +830,27 @@ int test_hexdump(int debug) {
     char str[size];
 
     if(debug)
-        printf("\n HexDump from a particular given address ");
+        printf("\n HexDump from a particular given address \n");
 
     // Valid Input Test
     hexdump(str, size, buf, strlen(buf)+1);
-    if(debug)
+    if(debug) {
         printf("\n Hex dump for string %s \n", buf);
-        puts(hexdump(str, sizeof(str), buf, strlen(buf)+1));
+        puts(str);
+    }
     if (str[0] == '\0')
         return 0;
+
+    if(debug)
+        printf("\n HexDump from a particular given address \n");    
     
     // Invalid Input Test
     size = 0;
     hexdump(str, size, buf, strlen(buf)+1);
+    if(debug) {
+        printf("\n Size is %ld \n", size);
+        puts(str);
+    }
     if (str[0] != '\0')
         return 0;
     
@@ -821,9 +862,11 @@ int test_hexdump(int debug) {
 int main(int argc, char* argv[]) {
     int status[6] = {0};
     int debug;
-    if(argv[0][0] == '-')
-        if(argv[0][1] == 'd')
-            debug = 1;
+
+    if(argc > 1)
+        debug = 1;
+    printf("\n DEBUG Status : %d \n", debug);
+
 
     status[0] = test_uint_to_binstr(debug);
     status[1] = test_int_to_binstr(debug);
@@ -833,7 +876,7 @@ int main(int argc, char* argv[]) {
     status[5] = test_hexdump(debug);
 
     for(int i =0; i <6; i++)
-        printf("\nTest: %d, Result: %d", i, status[i]);
+        printf("\nTest: %d, Result: %d\n", i, status[i]);
 
     return 0;
 }
