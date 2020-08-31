@@ -5,6 +5,38 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
+
+/******************************************************************************
+*​​Copyright​​ (C) ​​2020 ​​by ​​Arpit Savarkar
+*​​Redistribution,​​ modification ​​or ​​use ​​of ​​this ​​software ​​in​​source​ ​or ​​binary
+*​​forms​​ is​​ permitted​​ as​​ long​​ as​​ the​​ files​​ maintain​​ this​​ copyright.​​ Users​​ are
+*​​permitted​​ to ​​modify ​​this ​​and ​​use ​​it ​​to ​​learn ​​about ​​the ​​field​​ of ​​embedded
+*​​software. ​​Arpit Savarkar ​​and​ ​the ​​University ​​of ​​Colorado ​​are ​​not​ ​liable ​​for
+*​​any ​​misuse ​​of ​​this ​​material.
+*
+******************************************************************************/ 
+/**
+ * @file bit_operations.h
+ * @brief An headerfile for bit manipulation operations and 
+ * hexdump from a specific location 
+ * 
+ * This file provides functions prototypes and abstractions for bit manipulation 
+ * decimal to binary, decimal to hex, clearing, Setting and toggling 
+ * a bit and printing a hex dump from a specific location
+ * 
+ * @author Arpit Savarkar
+ * @date August 27 2020
+ * @version 1.0
+
+  Sources of Reference :
+  Online Links : https://stackoverflow.com/questions/7775991/how-to-get-hexdump-of-a-structure-data
+  Textbooks : Embedded Systems Fundamentals with Arm Cortex-M based MicroControllers 
+
+  I would like to thank the SA's of the course Rakesh Kumar, Saket Penurkar for their 
+  support to debug the hexdump code. 
+
+*/
+
 /**
 ​ * ​ ​ @brief​ ​ Returns a character corresponding to hex table for decimal equivalent
 ​ *
@@ -210,6 +242,8 @@ int test_uint_to_binstr(int debug);
  *   - Check on conversion to binary which require more than specified bytes 
  *   - Segmentation Faults Check 
  *   - Check on convertion to binary numbers which require more than specified bytes
+ *  
+ *   @param debug : To Print Debug Status  
  * 
 ​ * ​ ​ @return​ ​ Integer ( 1 = Success, 0 = Failure )
 ​ */
@@ -224,6 +258,8 @@ int test_int_to_binstr(int debug);
  *   - Check on conversion to hexadecimal which require more than specified bytes 
  *   - Segmentation Faults Check 
  *   - Check on convertion to binary numbers which require more than specified bytes
+ *  
+ *   @param debug : To Print Debug Status  
  * 
 ​ * ​ ​ @return​ ​ Integer ( 1 = Success, 0 = Failure )
 ​ */
@@ -237,6 +273,8 @@ int test_uint_to_hexstr(int debug);
  *   - Segmentation Faults Check 
  *   - Check on convertion to binary numbers which require more than specified bytes
  *   - Check which uses any other setups other than SET, TOGGLE, CLEAR
+ *  
+ *   @param debug : To Print Debug Status 
  * 
 ​ * ​ ​ @return​ ​ Integer ( 1 = Success, 0 = Failure )
 ​ */
@@ -250,6 +288,8 @@ int test_twiggle_bit(int debug);
  *   - Segmentation Faults Check 
  *   - Check on bit manipulation over bits which access more than require more than specified bytes
  *   - Check to prevent access to bits which are negative and greater than 30
+ *  
+ *   @param debug : To Print Debug Status 
  * 
 ​ * ​ ​ @return​ ​ Integer ( 1 = Success, 0xFFFFFFFF = Failure )
 ​ */
@@ -262,6 +302,8 @@ int test_grab_three_bits(int debug);
  *   Test Cases include 
  *   - Segmentation Faults Check 
  *   - Check to get the hexdump of a specified string upto the specific bytes
+ *  
+ *   @param debug : To Print Debug Status 
  * 
 ​ * ​ ​ @return​ ​ Integer ( 1 = Success, 0 = Failure )
 ​ */
